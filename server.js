@@ -76,29 +76,28 @@ app.post('/add-bus-details', async (req, res) => {
 });
 
 // POST API to fetch bus details by a MAC address
+// POST API to fetch bus details by multiple MAC addresses
 app.post('/get-bus-details', async (req, res) => {
-  const { macAddress } = req.body;
+  const { macAddresses } = req.body;
 
-  if (!macAddress) {
-    return res.status(400).json({ error: 'macAddress is required' });
+  if (!macAddresses || !Array.isArray(macAddresses)) {
+    return res.status(400).json({ error: '"macAddresses" is required and should be an array' });
   }
 
   try {
-    // Search for the bus by MAC address
-    const busDetails = await Bus.findOne({ macAddresses: macAddress });
+    const busDetails = await Bus.find({ macAddresses: { $in: macAddresses } });
 
-    if (busDetails) {
-      return res.status(200).json({ busDetails });
+    if (busDetails.length > 0) {
+      return res.status(200).json({ buses: busDetails });
     } else {
-      return res
-        .status(404)
-        .json({ error: 'Bus not found for the provided MAC address' });
+      return res.status(404).json({ error: 'No buses found for the provided MAC addresses' });
     }
   } catch (error) {
     console.error('Error fetching bus details:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 // Start the server
 app.listen(port, () => {
