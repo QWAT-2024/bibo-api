@@ -20,6 +20,7 @@ const busSchema = new mongoose.Schema({
   name: { type: String, required: true },
   macAddresses: { type: [String], required: true },
   number_plate: { type: String, required: true },
+  STOPGROUPNAME: { type: String, required: true },
 });
 
 const Bus = mongoose.model('Bus', busSchema);
@@ -36,11 +37,11 @@ app.post('/add-bus-details', async (req, res) => {
 
   try {
     for (const bus of busArray) {
-      const { name, macAddress, number_plate } = bus;
+      const { name, macAddress, number_plate, STOPGROUPNAME } = bus;
 
-      if (!name || !macAddress || !Array.isArray(macAddress) || !number_plate) {
+      if (!name || !macAddress || !Array.isArray(macAddress) || !number_plate || !STOPGROUPNAME) {
         return res.status(400).json({
-          error: 'Each bus must have "name", "macAddress" (array), and "number_plate".',
+          error: 'Each bus must have "name", "macAddress" (array), "number_plate", and "STOPGROUPNAME".',
         });
       }
 
@@ -53,6 +54,7 @@ app.post('/add-bus-details', async (req, res) => {
           ...new Set([...existingBus.macAddresses, ...macAddress]),
         ];
         existingBus.number_plate = number_plate;
+        existingBus.STOPGROUPNAME = STOPGROUPNAME;
         await existingBus.save();
       } else {
         // Add a new bus entry
@@ -60,6 +62,7 @@ app.post('/add-bus-details', async (req, res) => {
           name,
           macAddresses: macAddress,
           number_plate,
+          STOPGROUPNAME,
         });
         await newBus.save();
       }
@@ -97,8 +100,55 @@ app.post('/get-bus-details', async (req, res) => {
   }
 });
 
+// PUT API to update bus details by name
+app.put('/update-bus-details/:name', async (req, res) => {
+  const { name } = req.params;
+  const { macAddresses, number_plate, STOPGROUPNAME } = req.body;
+
+  if (!macAddresses || !Array.isArray(macAddresses) || !number_plate || !STOPGROUPNAME) {
+    return res.status(400).json({
+      error: '"macAddresses" (array), "number_plate", and "STOPGROUPNAME" are required.',
+    });
+  }
+
+  try {
+    const bus = await Bus.findOne({ name });
+
+    if (!bus) {
+      return res.status(404).json({ error: 'Bus not found' });
+    }
+
+    bus.macAddresses = macAddresses;
+    bus.number_plate = number_plate;
+    bus.STOPGROUPNAME = STOPGROUPNAME;
+
+    await bus.save();
+    return res.status(200).json({ message: 'Bus details updated successfully', bus });
+  } catch (error) {
+    console.error('Error updating bus details:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// DELETE API to remove a bus by name
+app.delete('/delete-bus/:name', async (req, res) => {
+  const { name } = req.params;
+
+  try {
+    const bus = await Bus.findOneAndDelete({ name });
+
+    if (!bus) {
+      return res.status(404).json({ error: 'Bus not found' });
+    }
+
+    return res.status(200).json({ message: 'Bus deleted successfully', bus });
+  } catch (error) {
+    console.error('Error deleting bus:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(Server running at http://localhost:${port});
 });
