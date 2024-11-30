@@ -1,20 +1,25 @@
 {
-    "name": "bibo-api",
-    "version": "1.0.0",
-    "main": "server.js",
-    "scripts": {
-      "start": "node server.js",
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "debug": "npm list --depth=0 && node server.js"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "description": "",
-    "dependencies": {
-      "body-parser": "^1.20.3",
-      "express": "^4.21.1",
-      "mongodb": "^6.11.0",
-      "mongoose": "^8.8.3"
-    }
+  "name": "bibo-api",
+  "version": "1.0.0",
+  "<<<<<<< HEAD
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "npm list --depth=0 && node server.js"
+=======
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+>>>>>>> 59a815079a3a15082724e7f82cecd7f494e411dd
+keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "express": "^4.21.1",
+    "mongodb": "^6.11.0",
+    "mongoose": "^8.8.3"
   }
+}
