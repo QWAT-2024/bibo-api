@@ -75,7 +75,6 @@ app.post('/add-bus-details', async (req, res) => {
   }
 });
 
-// POST API to fetch bus details by a MAC address
 // POST API to fetch bus details by multiple MAC addresses
 app.post('/get-bus-details', async (req, res) => {
   const { macAddresses } = req.body;
