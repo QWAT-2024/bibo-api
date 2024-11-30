@@ -1,13 +1,18 @@
 {
   "name": "bibo-api",
   "version": "1.0.0",
+  "<<<<<<< HEAD
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug": "npm list --depth=0 && node server.js"
-  },
-  "keywords": [],
+=======
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+>>>>>>> 59a815079a3a15082724e7f82cecd7f494e411dd
+keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
