@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start":"node server.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "debug": "npm list --depth=0 && node server.js",
-  }
+    "debug": "npm list --depth=0 && node server.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
