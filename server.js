@@ -21,6 +21,7 @@ const busSchema = new mongoose.Schema({
   macAddresses: { type: [String], required: true },
   number_plate: { type: String, required: true },
   STOPGROUPNAME: { type: String, required: true },
+  campaignId: { type: String, required: true }, // New field added
 });
 
 const Bus = mongoose.model('Bus', busSchema);
@@ -37,11 +38,11 @@ app.post('/add-bus-details', async (req, res) => {
 
   try {
     for (const bus of busArray) {
-      const { name, macAddress, number_plate, STOPGROUPNAME } = bus;
+      const { name, macAddress, number_plate, STOPGROUPNAME, campaignId } = bus;
 
-      if (!name || !macAddress || !Array.isArray(macAddress) || !number_plate || !STOPGROUPNAME) {
+      if (!name || !macAddress || !Array.isArray(macAddress) || !number_plate || !STOPGROUPNAME || !campaignId) {
         return res.status(400).json({
-          error: 'Each bus must have "name", "macAddress" (array), "number_plate", and "STOPGROUPNAME".',
+          error: 'Each bus must have "name", "macAddress" (array), "number_plate", "STOPGROUPNAME", and "campaignId".',
         });
       }
 
@@ -55,6 +56,7 @@ app.post('/add-bus-details', async (req, res) => {
         ];
         existingBus.number_plate = number_plate;
         existingBus.STOPGROUPNAME = STOPGROUPNAME;
+        existingBus.campaignId = campaignId; // Update campaignId
         await existingBus.save();
       } else {
         // Add a new bus entry
@@ -63,6 +65,7 @@ app.post('/add-bus-details', async (req, res) => {
           macAddresses: macAddress,
           number_plate,
           STOPGROUPNAME,
+          campaignId,
         });
         await newBus.save();
       }
@@ -103,11 +106,11 @@ app.post('/get-bus-details', async (req, res) => {
 // PUT API to update bus details by name
 app.put('/update-bus-details/:name', async (req, res) => {
   const { name } = req.params;
-  const { macAddresses, number_plate, STOPGROUPNAME } = req.body;
+  const { macAddresses, number_plate, STOPGROUPNAME, campaignId } = req.body;
 
-  if (!macAddresses || !Array.isArray(macAddresses) || !number_plate || !STOPGROUPNAME) {
+  if (!macAddresses || !Array.isArray(macAddresses) || !number_plate || !STOPGROUPNAME || !campaignId) {
     return res.status(400).json({
-      error: '"macAddresses" (array), "number_plate", and "STOPGROUPNAME" are required.',
+      error: '"macAddresses" (array), "number_plate", "STOPGROUPNAME", and "campaignId" are required.',
     });
   }
 
@@ -121,6 +124,7 @@ app.put('/update-bus-details/:name', async (req, res) => {
     bus.macAddresses = macAddresses;
     bus.number_plate = number_plate;
     bus.STOPGROUPNAME = STOPGROUPNAME;
+    bus.campaignId = campaignId; // Update campaignId
 
     await bus.save();
     return res.status(200).json({ message: 'Bus details updated successfully', bus });
@@ -150,7 +154,5 @@ app.delete('/delete-bus/:name', async (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log('Server running at http://localhost:${port}');
+  console.log(`Server running at http://localhost:${port}`);
 });
-
-
